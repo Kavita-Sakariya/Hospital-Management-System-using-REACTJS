@@ -1,4 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
 
+*{
+    margin: 0;
+    padding: 0;
+}
 .container{
-    text-align: center;
+
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container h2 {
+  font-family: "Dancing Script";
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  color: rgb(35, 137, 201);
+  }
+button{
+  background-color: #7babdb;
+  border: none;
+  border-radius: 4px;
+  transition-duration: 0.4s;
+  padding: 14px 40px;
+  font-size: 16px;
+}
+
+.button:hover {
+    background-color:  #7babdb;
+    color: white;
 }
