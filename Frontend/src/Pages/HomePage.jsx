@@ -1,15 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import bg from '../assets/img/blur-hospital.jpg'
+import './style.css'
+import { Link , useNavigate} from 'react-router-dom'
 
 
+
+const background={
+  margin: '0',
+  backgroundImage:`url(${bg})`,
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  height: '100vh',
+}
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <>
-    <div className="homepage" style={{textAlign: 'center'}}>
-    <h1> "Your Health Our Priority" </h1>
-    <div className="heading"> RK HOSPITAL</div>
-    <Link to="/login" id="headinglink">Login</Link>
+   
+    <div className="container" style={background}>
+    <h2> "Your Health Our Priority" </h2>
+    <div className="heading"><h1>RK HOSPITAL</h1></div>
+    <button onClick={()=>navigate("/login")}>Login</button>
     </div>
+   
     </>
    
   )
