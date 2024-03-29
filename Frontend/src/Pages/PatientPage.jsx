@@ -8,10 +8,11 @@ const PatientPage = () => {
   };
 
   return (
-    <div>
-      <h2>Hospital Patient Information</h2>
+    <div className="patientpage">
+      <h1>Hospital Patient Information</h1>
       <button onClick={toggleForm}>Add Patient</button>
       {showForm && <PatientForm />}
+      <div className="table-container">
       <table>
           <tr>
             <th>ID</th>
@@ -23,6 +24,7 @@ const PatientPage = () => {
             <th>Register</th>
           </tr>
       </table>
+      </div>
     </div>
   );
 };
@@ -58,6 +60,7 @@ const PatientForm = () => {
   };
 
   return (
+    <div className="form-container">
     <form onSubmit={handleSubmit}>
       <label>
         ID:
@@ -89,6 +92,7 @@ const PatientForm = () => {
       </label>
       <button type="submit">Submit</button>
     </form>
+    </div>
   );
 };
 
