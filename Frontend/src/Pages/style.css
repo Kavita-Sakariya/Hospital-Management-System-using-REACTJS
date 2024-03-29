@@ -74,3 +74,61 @@ input{
   color: #0d1453;
   font-weight: 535;
 }
+
+.patientpage{
+  text-align:center;
+}
+
+.patientpage h1 {
+  
+  height: 60px;
+  line-height: 60px;
+  background-color:  #848bb1;
+  margin-bottom: 20px; 
+}
+
+.patientpage button {
+  margin-left: 10px; 
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-container label {
+  margin-bottom: 10px; /* Add some vertical space between label and input */
+}
+
+.form-container input {
+  width: 100%; /* Make input fields take up full width */
+  padding: 8px; /* Add padding for better appearance */
+  margin-bottom: 15px; /* Add some vertical space between input fields */
+}
+
+.form-container button {
+  width: 100%; 
+  padding: 10px; 
+  margin-bottom: 15px;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+.table-container table {
+  border-collapse: collapse;
+  width: 80%; /* Adjust the width as needed */
+}
+
+.table-container th, .table-container td {
+  background-color: #acacb0;
+  border: 1px solid black; /* Add border for better visualization */
+  padding: 10px; /* Add padding for better appearance */
+  text-align: center; /* Center-align text */
+  width: calc(100% / 7); /* Equal width for each column */
+}
+
+
