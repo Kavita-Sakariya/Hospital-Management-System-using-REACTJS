@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+
+
 
 const PatientPage = () => {
+  
   const [showForm, setShowForm] = useState(false);
 
   const toggleForm = () => {
     setShowForm(!showForm);
   };
-
+  
   return (
+    <>
+  <Navbar></Navbar>
     <div className="patientpage">
-      <h1>Hospital Patient Information</h1>
+      <h1>Patient Information</h1>
       <button onClick={toggleForm}>Add Patient</button>
+      <button id="edit">Edit Patient</button>
+      <button id="delete">Delete Patient</button>
       {showForm && <PatientForm />}
       <div className="table-container">
       <table>
@@ -26,6 +34,7 @@ const PatientPage = () => {
       </table>
       </div>
     </div>
+    </>
   );
 };
 
