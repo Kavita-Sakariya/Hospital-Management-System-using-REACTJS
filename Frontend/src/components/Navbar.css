@@ -9,8 +9,8 @@
   top: 0px;
   left:0px;
   background-color: #848bb1;
-  height: 100px;
-  width: 100rem;
+  height: 80px;
+  width: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -73,7 +73,7 @@
 }
 
 .navbar-toggle {
-  color: #acacb0,
+  color: #acacb0;
   width: 100%;
   height: 80px;
   display: flex;
@@ -97,5 +97,24 @@ body{
   font-weight: bold;
   line-height: 1.8;
   color: #080808;
+}
+
+.nav-dropdown{
+  position: absolute;
+  top: 0;
+  left: 260px;
+  background-color:  #848bb1;
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 1.8;
+  padding: 10px;
+}
+
+.dropdown-menu{
+  background-color:  #848bb1;
+  font-size: 25px;
+  font-weight: bold;
+  border: none;
+  outline: none;
 }
 
