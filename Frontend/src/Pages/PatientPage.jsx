@@ -10,6 +10,8 @@ const PatientPage = () => {
   
   const [showForm, setShowForm] = useState(false);
   const[patients,setPatients] = useState([]);
+  const navigate=useNavigate();
+  
 
   useEffect(() => {
     axios.get("http://localhost:8000/Patient")
@@ -17,9 +19,19 @@ const PatientPage = () => {
     .catch(err=> console.log(err))
   }, []); 
 
+  const handleDelete = (p_id) => {
+    axios.delete("http://localhost:8000/deletepatient/" + p_id)
+    .then(res=> {console.log(res)
+      window.location.reload()
+    })
+    .catch(err=> console.log(err))
+  }
+
   const toggleForm = () => {
     setShowForm(!showForm);
   };
+
+ 
   
   return (
     <>
@@ -28,10 +40,10 @@ const PatientPage = () => {
       <h1>Patient Information</h1>
       <div className="page-button">
       <button onClick={toggleForm}>Add Patient</button>
-      <button id="edit">Edit Patient</button>
-      <button id="delete">Delete Patient</button>
+      {/* <button id="edit">Edit Patient</button>
+      <button id="delete">Delete Patient</button> */}
       </div>
-      {showForm && <PatientForm setShowForm={setShowForm} />} 
+      {showForm && <PatientForm />}
       <div className="table-container">
       <table>
           <thead>
@@ -43,6 +55,7 @@ const PatientPage = () => {
               <th>Sex</th>
               <th>Blood Group</th>
               <th>Register</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -56,10 +69,12 @@ const PatientPage = () => {
               <td>{patient.sex}</td>
               <td>{patient.bloodgroup}</td>
               <td>{patient.register}</td>
+              <td>
+                <button id="edit" onClick={()=>navigate(`/updatepatient/${patient._id}`)}>Update</button>
+                <button id="delete" onClick={(e) => handleDelete(patient._id)}>Delete</button>
+              </td>
             </tr>
-            }
-              
-            )}
+            })}
           </tbody>
         </table>
       </div>
@@ -68,7 +83,7 @@ const PatientPage = () => {
   );
 };
 
-const PatientForm = ({  setShowForm }) => {
+const PatientForm = () => {
 
   const navigate=useNavigate();
 
@@ -83,16 +98,14 @@ const PatientForm = ({  setShowForm }) => {
 
   async function submit(e){
     e.preventDefault();
-
+  
     try {
-        const res = await axios.post("http://localhost:8000/patient", {id, name, phone, age, sex, bloodgroup, register});
-        
-        if(res.data === "exist") {
+      await axios.post("http://localhost:8000/patient",{id,name,phone,age,sex,bloodgroup,register})
+        .then(res => {
+          if (res.data === "exist") {
             alert("User already exists");
-        } else if(res.data === "notexist") {
-            // If the submission is successful and the user does not exist, navigate to the patient page
-            navigate("/patient");
-            // Clear the form inputs
+          } else if (res.data === "notexist") {
+            alert("Patient added successfully");
             setId('');
             setName('');
             setPhone('');
@@ -100,22 +113,19 @@ const PatientForm = ({  setShowForm }) => {
             setSex('');
             setBloodGroup('');
             setRegister('');
-            // Close the form
-            setShowForm(false);
-        }
+            window.location.reload()
+            navigate("/patient");
+          }
+        })
+        .catch(e => {
+          alert("Wrong details");
+          console.log(e);
+        });
     } catch (error) {
-        // Handle errors
-        if (error.response) {
-            // Server responded with an error status code
-            alert("Wrong details");
-        } else {
-            // Something else went wrong (e.g., network error)
-            alert("Error submitting form");
-            console.error(error);
-        }
+      console.log(error);
     }
-}
-
+  }
+  
 
   
   return (
@@ -146,7 +156,7 @@ const PatientForm = ({  setShowForm }) => {
         <input type="text" name="bloodgroup" value={bloodgroup} onChange={(e)=> setBloodGroup(e.target.value)} />
       </label>
       <label>
-        Register:
+        New Register:
         <input type="text" name="register" value={register} onChange={(e)=> setRegister(e.target.value)} />
       </label>
       <button>submit</button>
