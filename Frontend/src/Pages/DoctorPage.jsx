@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import React, { useEffect, useState } from 'react';
+import Sidebar from '../Components/SideNavbar';
+import {useNavigate} from 'react-router-dom';
+import  axios  from 'axios';
+
 
 
 
 const DoctorPage = () => {
   
   const [showForm, setShowForm] = useState(false);
+  const[doctors,setDoctors] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get("http://localhost:8000/doctor")
+    .then(doctors => setDoctors(doctors.data))
+    .catch(err=> console.log(err))
+  }, []); 
+
+  const handleDelete = (p_id) => {
+    axios.delete("http://localhost:8000/deletedoctor/" + p_id)
+    .then(res=> {console.log(res)
+      window.location.reload()
+    })
+    .catch(err=> console.log(err))
+  }
+
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -13,24 +33,47 @@ const DoctorPage = () => {
   
   return (
     <>
-  <Navbar></Navbar>
+
+    <Sidebar/>
     <div className="doctorpage">
       <h1>Doctor Information</h1>
-      <button onClick={toggleForm}>Add Doctor</button>
-      <button id="edit">Edit Doctor</button>
-      <button id="delete">Delete Doctor</button>
+      <div className="page-button">
+        <button onClick={toggleForm}>Add Doctor</button>
+      </div>
       {showForm && <DoctorForm />}
       <div className="table-container">
       <table>
+        <thead>
           <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Phone</th>
             <th>Age</th>
             <th>Department</th>
+            <th>Gender</th>
             <th>DateOfJoining</th>
-            <th>Sex</th>
+            <th>Action</th>
           </tr>
+          </thead>
+          <tbody>
+            {
+            doctors.map(doctor => {
+              return <tr key={doctor.id}>
+              <td>{doctor.id}</td>
+              <td>{doctor.name}</td>
+              <td>{doctor.phone}</td>
+              <td>{doctor.age}</td>
+              <td>{doctor.department}</td>
+              <td>{doctor.sex}</td>
+              <td>{doctor.doj}</td>
+              
+              <td>
+                <button id="edit" onClick={()=>navigate(`/updatedoctor/${doctor._id}`)}>Update</button>
+                <button id="delete" onClick={(e) => handleDelete(doctor._id)}>Delete</button>
+              </td>
+            </tr>
+            })}
+          </tbody>
       </table>
       </div>
     </div>
@@ -39,67 +82,90 @@ const DoctorPage = () => {
 };
 
 const DoctorForm = () => {
-  const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    phone: '',
-    age: '',
-    department: '',
-    dateofjoining:'',
-    sex: ''
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    setFormData({
-      id: "",
-      name: "",
-      phone: "",
-      age: "",
-      department: "",
-      dateofjoining: "",
-      sex: "",
-    });
-  };
+
+  const[id,setId]=useState('');
+  const[name,setName]=useState('');
+  const[phone,setPhone]=useState('');
+  const[age,setAge]=useState('');
+  const[department,setDepartment]=useState('');
+  const[sex,setSex]=useState('');
+  const[doj,setDoj]=useState('');
+
+async function submit(e){
+  e.preventDefault();
+
+  try {
+    await axios.post("http://localhost:8000/doctor",{id,name,phone,age,department,sex,doj})
+      .then(res => {
+        if (res.data === "exist") {
+          alert("Doctor already exists");
+        } else if (res.data === "notexist") {
+          alert("Doctor added successfully");
+          setId('');
+          setName('');
+          setPhone('');
+          setAge('');
+          setDepartment('');
+          setSex('');
+          setDoj('');
+          window.location.reload()
+          navigate("/doctor");
+        }
+      })
+      .catch(e => {
+        alert("Wrong details");
+        console.log(e);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
   return (
     <div className="form-container">
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={submit}>
       <label>
         ID:
-        <input type="text" name="id" value={formData.id} onChange={handleChange} />
+        <input type="number" name="id" value={id} min={1} max={50} onChange={(e)=> setId(e.target.value)} required/>
       </label>
       <label>
         Name:
-        <input type="text" name="name" value={formData.name} onChange={handleChange} />
+        <input type="text" name="name"  value={name} onChange={(e)=> setName(e.target.value)} required/>
       </label>
       <label>
         Phone:
-        <input type="text" name="phone" value={formData.phone} onChange={handleChange} />
+        <input type="tel" name="phone" value={phone} pattern="[0-9]{10}" onChange={(e)=> setPhone(e.target.value)} placeholder='98000 98000'required />
       </label>
       <label>
         Age:
-        <input type="text" name="age" value={formData.age} onChange={handleChange} />
+        <input type="text" name="age" value={age} onChange={(e)=> setAge(e.target.value)} />
       </label>
+      <br/>
       <label>
         Department:
-        <input type="text" name="sex" value={formData.sex} onChange={handleChange} />
+        <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+          <option value="Surgical Department">Surgical Department</option>
+          <option value="Radiology Department">Radiology Department</option>
+          <option value="Gynecology Department">Gynecology Department</option>
+          <option value="Neurology Department">Neurology Department</option>
+        </select>
+      </label>
+      <br/>
+      <label>
+        Gender:
+        <select value={sex} onChange={(e) => setSex(e.target.value)} required>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+    </select>
       </label>
       <label>
         DateOfJoining:
-        <input type="text" name="bloodgrp" value={formData.bloodgrp} onChange={handleChange} />
+        <input type="date" name="doj" value={doj} onChange={(e)=> setDoj(e.target.value)} required/>
       </label>
-      <label>
-        Sex:
-        <input type="text" name="register" value={formData.register} onChange={handleChange} />
-      </label>
-      <button type="submit">Submit</button>
+      <button type="submit">submit</button>
     </form>
     </div>
   );
